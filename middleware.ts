@@ -11,6 +11,9 @@ export async function middleware(req: NextRequest) {
   console.log("[MIDDLEWARE] Running for:", req.nextUrl.pathname);
   const url = req.nextUrl.clone();
   const token = req.cookies.get("accessToken")?.value;
+  console.log("token", req.cookies.getAll());
+  // req.cookies.getAll()
+  console.log("token", token);
   console.log("[MIDDLEWARE] Token:", token ? "exists" : "missing");
 
   // Redirect to home if no token

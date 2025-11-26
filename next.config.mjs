@@ -3,6 +3,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["@radix-ui/react-icons", "lucide-react"],
   },
+
   images: {
     remotePatterns: [
       {
