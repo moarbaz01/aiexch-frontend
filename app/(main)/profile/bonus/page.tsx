@@ -61,7 +61,7 @@ const mockBonuses: Bonus[] = [
   },
 ];
 
-export default function BonusesGifts({ onBack }: { onBack: () => void }) {
+export default function BonusesGifts() {
   const [filter, setFilter] = useState<
     "all" | "available" | "claimed" | "expired"
   >("all");
@@ -169,7 +169,7 @@ export default function BonusesGifts({ onBack }: { onBack: () => void }) {
               onClick={() => setFilter("all")}
               variant={filter === "all" ? "default" : "outline"}
               size="sm"
-              variant={filter === "all" ? "default" : "outline"}
+              // variant={filter === "all" ? "default" : "outline"}
             >
               All
             </Button>
@@ -272,9 +272,7 @@ export default function BonusesGifts({ onBack }: { onBack: () => void }) {
                     {bonus.spins && `${bonus.spins} Spins`}
                   </div>
                   {bonus.status === "available" && (
-                    <Button size="sm">
-                      Claim
-                    </Button>
+                    <Button size="sm">Claim</Button>
                   )}
                 </div>
               </div>

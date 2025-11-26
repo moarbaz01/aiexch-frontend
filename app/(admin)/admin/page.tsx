@@ -22,7 +22,10 @@ import {
   useKycDocuments,
 } from "@/hooks/useAdmin";
 import { useRouter } from "next/navigation";
-import { DashboardStatsSkeleton, DashboardActivitySkeleton } from "@/components/admin/skeletons";
+import {
+  DashboardStatsSkeleton,
+  DashboardActivitySkeleton,
+} from "@/components/admin/skeletons";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -165,9 +168,7 @@ export default function AdminDashboard() {
                   <div className="text-2xl font-bold text-foreground">
                     {stat.value}
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {stat.change}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{stat.change}</p>
                 </CardContent>
               </Card>
             );
@@ -281,27 +282,21 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">
-                Database
-              </span>
+              <span className="text-sm text-muted-foreground">Database</span>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span className="text-sm text-green-500">Online</span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">
-                API Status
-              </span>
+              <span className="text-sm text-muted-foreground">API Status</span>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span className="text-sm text-green-500">Healthy</span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">
-                Last Backup
-              </span>
+              <span className="text-sm text-muted-foreground">Last Backup</span>
               <span className="text-sm text-foreground">
                 {new Date().toLocaleDateString()}
               </span>
@@ -340,9 +335,7 @@ export default function AdminDashboard() {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">
-                  Verified Users
-                </span>
+                <span className="text-muted-foreground">Verified Users</span>
                 <span className="text-blue-500 font-semibold">
                   {kycDocuments.filter((k) => k.status === "verified").length}
                 </span>
@@ -383,17 +376,13 @@ export default function AdminDashboard() {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">
-                  Today's Volume
-                </span>
+                <span className="text-muted-foreground">Today's Volume</span>
                 <span className="text-green-500 font-semibold">
                   ${todayVolume.toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">
-                  Pending Amount
-                </span>
+                <span className="text-muted-foreground">Pending Amount</span>
                 <span className="text-yellow-500 font-semibold">
                   $
                   {transactions

@@ -88,13 +88,13 @@ export default function KYCPage() {
   }
 
   const pendingCount = kycSubmissions.filter(
-    (k) => k.status === "pending"
+    (k: { status: string }) => k.status === "pending"
   ).length;
   const approvedCount = kycSubmissions.filter(
-    (k) => k.status === "approved"
+    (k: { status: string }) => k.status === "approved"
   ).length;
   const rejectedCount = kycSubmissions.filter(
-    (k) => k.status === "rejected"
+    (k: { status: string }) => k.status === "rejected"
   ).length;
 
   return (

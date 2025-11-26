@@ -18,7 +18,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
 import { useProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,13 +33,7 @@ import { useRouter } from "next/navigation";
 import { PersonalInfoSkeleton } from "@/components/skeletons/profile-skeletons";
 import { UserData } from "@/types";
 
-interface PersonalInfoScreenProps {
-  onBack: () => void;
-}
-
-export default function PersonalInfoScreen({
-  onBack,
-}: PersonalInfoScreenProps) {
+export default function PersonalInfoScreen() {
   const { user } = useAuth();
   const { data: profileData, isLoading } = useProfile();
   const updateProfileMutation = useUpdateProfile();
@@ -151,23 +150,17 @@ export default function PersonalInfoScreen({
               <h2 className="text-xl font-bold text-foreground mb-1">
                 {userData.firstName} {userData.lastName}
               </h2>
-              <p className="text-muted-foreground mb-4">
-                @{userData.username}
-              </p>
+              <p className="text-muted-foreground mb-4">@{userData.username}</p>
 
               <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-border">
                 <div>
-                  <div className="text-2xl font-bold text-primary">
-                    85%
-                  </div>
+                  <div className="text-2xl font-bold text-primary">85%</div>
                   <div className="text-sm text-muted-foreground">
                     Profile Complete
                   </div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-accent">
-                    Level 2
-                  </div>
+                  <div className="text-2xl font-bold text-accent">Level 2</div>
                   <div className="text-sm text-muted-foreground">
                     Account Level
                   </div>
@@ -323,9 +316,7 @@ export default function PersonalInfoScreen({
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-card rounded-lg">
                   <div>
-                    <div className="text-foreground font-medium">
-                      Password
-                    </div>
+                    <div className="text-foreground font-medium">Password</div>
                     <div className="text-muted-foreground text-sm">
                       Last changed 30 days ago
                     </div>
@@ -348,10 +339,7 @@ export default function PersonalInfoScreen({
                       Add an extra layer of security
                     </div>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                  >
+                  <Button variant="outline" size="sm">
                     Enable 2FA
                   </Button>
                 </div>
@@ -474,9 +462,7 @@ export default function PersonalInfoScreen({
           <div className="flex gap-3 mt-6">
             <Button
               onClick={async () => {
-                if (
-                  passwordData.newPassword !== passwordData.confirmPassword
-                ) {
+                if (passwordData.newPassword !== passwordData.confirmPassword) {
                   toast.error("Passwords don't match");
                   return;
                 }
@@ -557,9 +543,7 @@ function ProfileField({
 
   return (
     <div className="space-y-2">
-      <Label className="text-sm font-medium">
-        {label}
-      </Label>
+      <Label className="text-sm font-medium">{label}</Label>
 
       {isEditing ? (
         <div className="space-y-2">
@@ -570,17 +554,10 @@ function ProfileField({
             autoFocus
           />
           <div className="flex gap-2 justify-end">
-            <Button
-              onClick={() => onSave(field)}
-              size="sm"
-            >
+            <Button onClick={() => onSave(field)} size="sm">
               <Save className="w-4 h-4" />
             </Button>
-            <Button
-              onClick={onCancel}
-              variant="outline"
-              size="sm"
-            >
+            <Button onClick={onCancel} variant="outline" size="sm">
               <X className="w-4 h-4" />
             </Button>
           </div>
