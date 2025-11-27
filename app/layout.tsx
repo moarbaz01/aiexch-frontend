@@ -50,13 +50,12 @@ export default function RootLayout({
             <BetSlipProvider>
               <SportsProvider>
                 <MaintenanceWrapper>
-                <MainLayout>
-                  {children}
-                  <PopupDisplay />
-                  <Footer />
-                  <BottomNavigation />
-                </MainLayout>
-              </MaintenanceWrapper>
+                  <MainLayout>
+                    {children}
+                    <PopupDisplay />
+                    <BottomNavigation />
+                  </MainLayout>
+                </MaintenanceWrapper>
               </SportsProvider>
             </BetSlipProvider>
             <Toaster closeButton position="top-right" />

@@ -91,7 +91,17 @@ export function SportsProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  const connect = useCallback(() => {
+  const connect = useCallback((shouldConnect: boolean) => {
+    if (!shouldConnect) {
+      // Disconnect if we shouldn't be connected
+      if (wsRef.current) {
+        console.log("[SportsContext] Disconnecting WebSocket (not on sports page)");
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+      return;
+    }
+
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       return;
     }
@@ -350,7 +360,9 @@ export function SportsProvider({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
-    connect();
+    // Only connect if on sports page
+    const isSportsPage = typeof window !== "undefined" && window.location.pathname.startsWith("/sports");
+    connect(isSportsPage);
 
     // Cleanup on unmount
     return () => {
@@ -360,6 +372,31 @@ export function SportsProvider({ children }: { children: React.ReactNode }) {
       if (wsRef.current) {
         wsRef.current.close();
       }
+    };
+  }, [connect]);
+
+  // Monitor route changes
+  useEffect(() => {
+    const handleRouteChange = () => {
+      const isSportsPage = window.location.pathname.startsWith("/sports");
+      if (isSportsPage && !wsRef.current) {
+        console.log("[SportsContext] Navigated to sports page, connecting...");
+        connect(true);
+      } else if (!isSportsPage && wsRef.current) {
+        console.log("[SportsContext] Navigated away from sports page, disconnecting...");
+        connect(false);
+      }
+    };
+
+    // Listen for navigation events
+    window.addEventListener("popstate", handleRouteChange);
+    
+    // For Next.js client-side navigation, we need to check periodically
+    const interval = setInterval(handleRouteChange, 1000);
+
+    return () => {
+      window.removeEventListener("popstate", handleRouteChange);
+      clearInterval(interval);
     };
   }, [connect]);
 

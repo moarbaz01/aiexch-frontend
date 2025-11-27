@@ -7,9 +7,13 @@ import { AppSidebar } from "./layout/app-sidebar-new";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith('/admin');
+  const isAdminRoute = pathname?.startsWith("/admin");
+  const isAuthRoute =
+    pathname?.startsWith("/login") ||
+    pathname?.startsWith("/signup") ||
+    pathname?.startsWith("/forgot-password");
 
-  if (isAdminRoute) {
+  if (isAdminRoute || isAuthRoute) {
     return <>{children}</>;
   }
 

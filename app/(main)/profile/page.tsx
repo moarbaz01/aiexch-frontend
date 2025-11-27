@@ -14,6 +14,12 @@ import {
   Shield,
   ChevronRight,
   Wallet,
+  Info,
+  FileText,
+  UserCheck,
+  Briefcase,
+  Headphones,
+  BookOpen,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, lazy, Suspense } from "react";
@@ -51,71 +57,68 @@ export default function DashboardContent() {
       <div className="min-h-screen ">
         <div className="max-w-7xl mx-auto lg:p-8">
           {/* Profile Header */}
-          <Card className="p-6 lg:p-8 mb-8">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <Card className="p-4 lg:p-8 mb-4 lg:mb-8">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
               {/* User Info */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-16 h-16 lg:w-20 lg:h-20 bg-primary rounded-2xl flex items-center justify-center">
-                    <User className="w-8 h-8 lg:w-10 lg:h-10 text-primary-foreground" />
+                  <div className="w-12 h-12 lg:w-20 lg:h-20 bg-primary rounded-xl lg:rounded-2xl flex items-center justify-center">
+                    <User className="w-6 h-6 lg:w-10 lg:h-10 text-primary-foreground" />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-background"></div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 lg:w-6 lg:h-6 bg-green-500 rounded-full border-2 border-background"></div>
                 </div>
                 <div>
-                  <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">
+                  <h1 className="text-lg lg:text-3xl font-bold text-foreground">
                     {user?.username}
                   </h1>
-                  <p className="text-muted-foreground text-sm lg:text-base">
+                  <p className="text-muted-foreground text-xs lg:text-base">
                     Premium Member
                   </p>
                 </div>
               </div>
 
               {/* Balance Card */}
-              <Card className="bg-primary/10 border-primary/30 p-6 min-w-[280px]">
-                <div className="flex items-center gap-2 mb-2">
-                  <Wallet className="w-5 h-5 text-primary" />
-                  <span className="text-muted-foreground text-sm">
+              <Card className="bg-primary/10 border-primary/30 p-4 lg:p-6 lg:min-w-[280px]">
+                <div className="flex items-center gap-2 mb-1 lg:mb-2">
+                  <Wallet className="w-4 h-4 lg:w-5 lg:h-5 text-primary" />
+                  <span className="text-muted-foreground text-xs lg:text-sm">
                     Available Balance
                   </span>
                 </div>
                 {isLoading || balanceLoading ? (
                   <div className="animate-pulse">
-                    <div className="h-8 bg-primary/20 rounded w-32 mb-2"></div>
-                    <div className="h-4 bg-primary/10 rounded w-20"></div>
+                    <div className="h-6 lg:h-8 bg-primary/20 rounded w-24 lg:w-32"></div>
                   </div>
                 ) : (
-                  <div>
-                    <div className="text-3xl lg:text-4xl font-bold text-primary mb-1">
-                      ₹{formattedBalance.inr}
-                    </div>
+                  <div className="text-2xl lg:text-4xl font-bold text-primary">
+                    ₹{formattedBalance.inr}
                   </div>
                 )}
               </Card>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4 mt-8">
+            <div className="flex gap-3 lg:gap-4 mt-4 lg:mt-8">
               <Button
                 onClick={() => handleOpenTransactionModal("deposit")}
-                className="flex-1 h-14 text-lg font-semibold "
+                className="flex-1 h-11 lg:h-14 text-sm lg:text-lg font-semibold"
               >
-                <Banknote className="w-5 h-5 mr-2" />
+                <Banknote className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
                 Deposit
               </Button>
               <Button
                 onClick={() => handleOpenTransactionModal("withdraw")}
                 variant="outline"
-                className="flex-1 h-14 text-lg font-semibold "
+                className="flex-1 h-11 lg:h-14 text-sm lg:text-lg font-semibold"
               >
-                <CreditCard className="w-5 h-5 mr-2" />
+                <CreditCard className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
                 Withdraw
               </Button>
             </div>
           </Card>
 
           {/* Menu Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4">
             <MenuCard
               icon={User}
               title="Personal Information"
@@ -158,6 +161,48 @@ export default function DashboardContent() {
               description="Manage your alerts"
               onClick={() => router.push("/profile/notifications")}
             />
+            {/* <MenuCard
+              icon={Info}
+              title="FAQs"
+              description="Frequently asked questions"
+              onClick={() => router.push("/faqs")}
+            />
+            <MenuCard
+              icon={BookOpen}
+              title="Game Rules"
+              description="Learn game rules"
+              onClick={() => router.push("/game-rules")}
+            />
+            <MenuCard
+              icon={FileText}
+              title="Terms & Conditions"
+              description="Read our terms"
+              onClick={() => router.push("/terms")}
+            />
+            <MenuCard
+              icon={Shield}
+              title="Privacy Policy"
+              description="Your privacy matters"
+              onClick={() => router.push("/privacy")}
+            />
+            <MenuCard
+              icon={UserCheck}
+              title="Responsible Gaming"
+              description="Play responsibly"
+              onClick={() => router.push("/responsible-gaming")}
+            />
+            <MenuCard
+              icon={Briefcase}
+              title="White Labeling"
+              description="Business solutions"
+              onClick={() => router.push("/white-labeling")}
+            />
+            <MenuCard
+              icon={Headphones}
+              title="Live Support"
+              description="Get help now"
+              onClick={() => router.push("/live-support")}
+            /> */}
             <MenuCard
               icon={LogOut}
               title="Sign Out"
@@ -199,38 +244,40 @@ function MenuCard({
   return (
     <Card
       onClick={onClick}
-      className={`group w-full cursor-pointer p-6 transition-all duration-300 hover:scale-[1.02] ${
+      className={`group w-full cursor-pointer p-4 lg:p-6 transition-all duration-300 hover:scale-[1.02] ${
         isDanger ? "hover:border-destructive/40" : "hover:border-primary/50"
       }`}
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 lg:gap-4">
           <div
-            className={`w-12 h-12 rounded-md flex items-center justify-center transition-colors ${
+            className={`w-10 h-10 lg:w-12 lg:h-12 rounded-md flex items-center justify-center transition-colors ${
               isDanger
                 ? "bg-destructive/10 group-hover:bg-destructive/20"
                 : "bg-primary/10 group-hover:bg-primary/20"
             }`}
           >
             <Icon
-              className={`w-6 h-6 ${
+              className={`w-5 h-5 lg:w-6 lg:h-6 ${
                 isDanger ? "text-destructive" : "text-primary"
               }`}
             />
           </div>
           <div className="text-left">
             <h3
-              className={`font-semibold text-lg mb-1 ${
+              className={`font-semibold text-base lg:text-lg mb-0.5 lg:mb-1 ${
                 isDanger ? "text-destructive" : "text-foreground"
               }`}
             >
               {title}
             </h3>
-            <p className="text-muted-foreground text-sm">{description}</p>
+            <p className="text-muted-foreground text-xs lg:text-sm">
+              {description}
+            </p>
           </div>
         </div>
         <ChevronRight
-          className={`w-5 h-5 transition-transform group-hover:translate-x-1 ${
+          className={`w-4 h-4 lg:w-5 lg:h-5 transition-transform group-hover:translate-x-1 ${
             isDanger ? "text-destructive" : "text-muted-foreground"
           }`}
         />

@@ -4,10 +4,22 @@ import { NewPromotionCard } from "@/components/cards/new-promotion-card";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePublicPromotions } from "@/hooks/usePublic";
+import { PromotionSkeleton } from "@/components/skeletons/promotion-skeleton";
 
 export default function HomePromotionsSection() {
-  const { data: promotions } = usePublicPromotions();
+  const { data: promotions, isLoading } = usePublicPromotions();
   const featuredPromotions = (promotions || []).slice(0, 3);
+
+  if (isLoading) {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-xl font-semibold text-primary">OFFERS</h2>
+        </div>
+        <PromotionSkeleton count={3} />
+      </div>
+    );
+  }
 
   if (featuredPromotions.length === 0) {
     return null;

@@ -2,9 +2,16 @@
 
 import { BannerCarousel } from "@/components/ui/banner-carousel";
 import { usePublicBanners } from "@/hooks/usePublic";
+import { CarouselSkeleton } from "@/components/skeletons/carousel-skeleton";
 
 export default function HomeBanner() {
-  const { data: banners } = usePublicBanners("home");
+  const { data: banners, isLoading } = usePublicBanners("home");
+
+  if (isLoading) {
+    return (
+      <CarouselSkeleton itemCount={1} className="h-[200px] md:h-[400px]" />
+    );
+  }
 
   if (!banners || banners.length === 0) return null;
 

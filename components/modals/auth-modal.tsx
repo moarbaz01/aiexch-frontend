@@ -181,7 +181,7 @@ export function AuthModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="backdrop-blur-2xl border-border max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="backdrop-blur-2xl border-border max-w-2xl max-h-[90vh] overflow-y-auto"
         showCloseButton={false}
       >
         <div className="w-full relative">

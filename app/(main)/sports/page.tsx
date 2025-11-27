@@ -7,7 +7,7 @@ export default function SportsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/sports/-4');
+    router.replace('/sports/all');
   }, [router]);
 
   return null;

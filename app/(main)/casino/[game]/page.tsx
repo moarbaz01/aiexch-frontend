@@ -2,7 +2,7 @@
 
 import { useInit } from "@/hooks/useCasino";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -12,8 +12,9 @@ const CasinoGame = () => {
   const router = useRouter();
   const { mutate: init, isPending } = useInit();
   const { isLoggedIn, user } = useAuth();
+  const [gameUrl, setGameUrl] = useState<string | null>(null);
+  const [iframeLoading, setIframeLoading] = useState(true);
 
-  console.log(isLoggedIn, user);
   useEffect(() => {
     if (!isLoggedIn) {
       toast.error("Please login to play casino games");
@@ -29,7 +30,7 @@ const CasinoGame = () => {
         {
           onSuccess: (response) => {
             if (response.data?.url) {
-              window.location.href = response.data.url;
+              setGameUrl(response.data.url);
             }
           },
           onError: (error) => {
@@ -40,19 +41,24 @@ const CasinoGame = () => {
     }
   }, [game, init, isLoggedIn, router]);
 
-  if (isPending) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   return (
-    <div className="h-screen w-full relative pb-12">
-      <div className="absolute inset-0 flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
+    <div className=" md:h-screen h-[90vh]">
+      {(isPending || !gameUrl || iframeLoading) && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background z-10">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">Loading game...</p>
+          </div>
+        </div>
+      )}
+      {gameUrl && (
+        <iframe
+          src={gameUrl}
+          className="w-full h-full border-0"
+          allow="autoplay; fullscreen"
+          onLoad={() => setIframeLoading(false)}
+        />
+      )}
     </div>
   );
 };

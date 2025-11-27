@@ -31,7 +31,7 @@ const navItems = [
   { id: "sports", label: "Sports", icon: Volleyball, link: "/sports" },
   { id: "casino", label: "Casino", icon: Dices, link: "/casino" },
   { id: "promotions", label: "Promotions", icon: Gift, link: "/promotions" },
-  { id: "more", label: "More", icon: MoreHorizontal },
+  { id: "profile", label: "Profile", icon: User, link: "/profile" },
 ];
 
 const getMoreMenuItems = (
@@ -87,13 +87,22 @@ export default function BottomNavigation() {
     document.body.style.overflow = "unset";
   };
 
-  if (pathname.includes("/admin")) return null;
+  const hiddenRoutes = ["/login", "/signup", "/forgot-password", "/admin"];
+  const isCasinoGame =
+    pathname?.startsWith("/casino/") && pathname !== "/casino";
+
+  if (hiddenRoutes.some((route) => pathname?.includes(route)) || isCasinoGame)
+    return null;
+
+  const visibleNavItems = navItems.filter(item => 
+    item.id !== 'profile' || isLoggedIn
+  );
 
   return (
     <>
       <div className="fixed bottom-0 left-0 right-0 rounded-t-2xl z-40 bg-card border-t-border border backdrop-blur-lg lg:hidden body-modal-open:hidden">
         <div className="flex items-center justify-around  px-2 py-2">
-          {navItems.map((item) => {
+          {visibleNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
 
@@ -112,10 +121,6 @@ export default function BottomNavigation() {
                     } else {
                       router.push("/");
                     }
-                  }
-
-                  if (item.id === "more") {
-                    openMoreModal();
                   }
 
                   if (item.id === "bets") {

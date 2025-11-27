@@ -80,19 +80,20 @@ export function useOddsWebSocket({
     };
 
     return () => {
-      try {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(
-            JSON.stringify({
-              action: "unsubscribe",
-              eventTypeId,
-              marketIds: subscriptionIds,
-            })
-          );
+      if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+        try {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(
+              JSON.stringify({
+                action: "unsubscribe",
+                eventTypeId,
+                marketIds: subscriptionIds,
+              })
+            );
+          }
+        } catch (error) {
+          console.error("[useOddsWebSocket] Failed to unsubscribe", error);
         }
-      } catch (error) {
-        console.error("[useOddsWebSocket] Failed to unsubscribe", error);
-      } finally {
         ws.close();
       }
     };

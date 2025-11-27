@@ -47,6 +47,24 @@ export default function SportsLayout({
           <div className="mb-6">
             <div className="border-border">
               <div className="flex items-center gap-4 sm:gap-4 overflow-x-auto scrollbar-hide -mr-4 pr-4">
+                <Link
+                  href="/sports/all"
+                  className={`flex flex-col w-[100px] h-[100px] rounded-md p-4 items-center justify-center gap-1 cursor-pointer transition-colors ${
+                    selectedSport === "all"
+                      ? "bg-primary/20 border border-primary/50"
+                      : "bg-muted hover:bg-muted/80"
+                  }`}
+                >
+                  <Image
+                    src="/sports-icons/play-button.svg"
+                    height={48}
+                    width={48}
+                    alt="All Sports"
+                  />
+                  <span className="text-xs text-foreground text-center leading-tight break-words">
+                    All
+                  </span>
+                </Link>
                 {sportsIcons.map((sport, i) => (
                   <Link
                     key={i}

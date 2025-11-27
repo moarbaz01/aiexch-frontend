@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Building2, ArrowLeft } from "lucide-react";
 import { TransactionModalProps, MethodSelectionProps } from "@/types";
-import { userApi, publicApi, uploadFile } from "@/lib/api";
+import { userApi, publicApi } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { DepositDetails } from "./deposit-details";
@@ -90,7 +90,7 @@ export default function TransactionModal({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent
-        className="w-full max-w-md max-h-[90vh] overflow-y-auto"
+        className="max-w-md max-h-[90vh] overflow-y-auto"
         showCloseButton={false}
       >
         <DialogHeader>
