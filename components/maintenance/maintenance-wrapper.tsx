@@ -6,7 +6,6 @@ import { publicApi } from "@/lib/api";
 import MaintenancePage from "./maintenance-page";
 import { MaintenanceWrapperProps } from "@/types";
 
-
 export function MaintenanceWrapper({ children }: MaintenanceWrapperProps) {
   const [isMaintenanceMode, setIsMaintenanceMode] = useState(false);
   const [maintenanceMessage, setMaintenanceMessage] = useState("");
@@ -20,7 +19,7 @@ export function MaintenanceWrapper({ children }: MaintenanceWrapperProps) {
       try {
         const response = await publicApi.getSettings();
         const settings = response.data.data;
-        
+
         setIsMaintenanceMode(settings?.maintenanceMode || false);
         setMaintenanceMessage(settings?.maintenanceMessage || "");
       } catch (error) {
@@ -33,13 +32,13 @@ export function MaintenanceWrapper({ children }: MaintenanceWrapperProps) {
     checkMaintenanceMode();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-casino-dark flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-casino-primary"></div>
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="min-h-screen bg-casino-dark flex items-center justify-center">
+  //       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-casino-primary"></div>
+  //     </div>
+  //   );
+  // }
 
   if (isMaintenanceMode && !isAdminPage) {
     return <MaintenancePage message={maintenanceMessage} />;
