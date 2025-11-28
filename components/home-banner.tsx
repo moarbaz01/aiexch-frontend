@@ -25,10 +25,10 @@ export default function HomeBanner() {
       />
 
       {/* Decorative corners */}
-      {/* <div className="absolute top-4 left-4 w-16 h-16 border-l-2 border-t-2 border-primary/30 z-20"></div>
+      <div className="absolute top-4 left-4 w-16 h-16 border-l-2 border-t-2 border-primary/30 z-20"></div>
       <div className="absolute top-4 right-4 w-16 h-16 border-r-2 border-t-2 border-primary/30 z-20"></div>
       <div className="absolute bottom-4 left-4 w-16 h-16 border-l-2 border-b-2 border-primary/30 z-20"></div>
-      <div className="absolute bottom-4 right-4 w-16 h-16 border-r-2 border-b-2 border-primary/30 z-20"></div> */}
+      <div className="absolute bottom-4 right-4 w-16 h-16 border-r-2 border-b-2 border-primary/30 z-20"></div>
     </div>
   );
 }

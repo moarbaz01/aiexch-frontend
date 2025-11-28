@@ -84,19 +84,19 @@ export function BannerCarousel({
 
       {items.length > 1 && (
         <>
-          {/* <button
+          <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 shadow z-10 bg-accent hover:bg-border text-accent-foreground  p-3 rounded-full transition-all"
+            className="absolute hidden md:block left-4 top-1/2 -translate-y-1/2 shadow z-10 bg-accent hover:bg-border text-accent-foreground  p-3 rounded-full transition-all"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 shadow  bg-accent hover:bg-border  text-accent-foreground p-3 rounded-full transition-all"
+            className="absolute right-4 hidden md:block top-1/2 -translate-y-1/2 z-10 shadow  bg-accent hover:bg-border  text-accent-foreground p-3 rounded-full transition-all"
           >
             <ChevronRight className="w-6 h-6" />
-          </button> */}
+          </button>
 
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-3 z-10">
             {items.map((_: any, index: number) => (

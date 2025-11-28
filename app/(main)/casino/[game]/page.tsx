@@ -44,7 +44,7 @@ const CasinoGame = () => {
   return (
     <div className=" md:h-screen h-[90vh]">
       {(isPending || !gameUrl || iframeLoading) && (
-        <div className="absolute inset-0 flex items-center justify-center bg-background z-10">
+        <div className=" mt-12 flex items-center justify-center bg-background z-10">
           <div className="text-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">Loading game...</p>

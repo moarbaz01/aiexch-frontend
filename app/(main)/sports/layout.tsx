@@ -42,7 +42,7 @@ export default function SportsLayout({
   return (
     <div className="min-h-screen">
       <div className="flex">
-        <div className="flex-1 lg:p-6 lg:pt-0 pb-20 lg:pb-6 w-full">
+        <div className="flex-1 lg:p-6 lg:pt-0 pb-20 lg:pb-6 lg:max-w-[calc(100vw-20rem-320px)]">
           {/* Sports Navigation */}
           <div className="mb-6">
             <div className="border-border">
@@ -94,8 +94,8 @@ export default function SportsLayout({
         </div>
 
         {/* Right Sidebar - Bet Slip */}
-        <div className="hidden lg:block w-80 relative">
-          <div className="fixed top-16 right-0 w-80 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <div className="hidden lg:block w-80 shrink-0">
+          <div className="sticky top-16 w-80 h-[calc(100vh-4rem)] p-4">
             <BetSlip />
           </div>
         </div>

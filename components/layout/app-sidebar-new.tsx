@@ -55,7 +55,7 @@ const getIconColor = (title: string) => {
 const getMenuGroups = (isLoggedIn: boolean): MenuGroup[] => {
   const baseGroups = [
     {
-      title: "Gaming",
+      title: "",
       items: [
         { title: "Home", icon: Home, link: "/" },
         { title: "Casino", icon: Dice6, link: "/casino" },
@@ -64,8 +64,8 @@ const getMenuGroups = (isLoggedIn: boolean): MenuGroup[] => {
           icon: Trophy,
           link: "/sports",
           subItems: [
-            { title: "Kabaddi", link: "/sports/-4" },
             { title: "Cricket", link: "/sports/4" },
+            { title: "Kabaddi", link: "/sports/-4" },
             { title: "Virtual T10", link: "/sports/-17" },
             { title: "Greyhound Racing", link: "/sports/4339" },
             { title: "Horse Racing", link: "/sports/7" },
@@ -123,7 +123,7 @@ const getMenuGroups = (isLoggedIn: boolean): MenuGroup[] => {
 export function AppSidebar() {
   const { isLoggedIn } = useAuth();
   const [mounted, setMounted] = useState(false);
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [expandedItems, setExpandedItems] = useState<string[]>(["Sport"]);
   const router = useRouter();
   const pathname = usePathname();
   console.log("path", pathname);
@@ -137,6 +137,7 @@ export function AppSidebar() {
 
   const handleItemClick = (item: MenuItem) => {
     if (item.subItems) {
+      if (item.title === "Sport") return;
       setExpandedItems((prev) =>
         prev.includes(item.title)
           ? prev.filter((title) => title !== item.title)
@@ -179,7 +180,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="w-64 md:hidden lg:block border-r border-primary/20">
-      <SidebarContent className="p-4 pt-6 md:pt-24 lg:pt-6 bg-card/50">
+      <SidebarContent className="p-4 pt-6 lg:pt-0 bg-card/50">
         <div className="space-y-8">
           {menuGroups.map((group) => (
             <div key={group.title}>
@@ -207,7 +208,7 @@ export function AppSidebar() {
                           }`}
                         />
                         <span className="font-medium flex-1">{item.title}</span>
-                        {item.subItems &&
+                        {item.subItems && item.title !== "Sport" &&
                           (expandedItems.includes(item.title) ? (
                             <ChevronDown className="h-4 w-4" />
                           ) : (

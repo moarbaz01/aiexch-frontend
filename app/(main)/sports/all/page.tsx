@@ -23,8 +23,8 @@ export default function AllSportsPage() {
     series: useSportsSeries(sport.eventType, true) as Series[],
   }));
 
-  const allSeries = allSportsData.flatMap((data) => 
-    data.series.map(series => ({ ...series, eventType: data.eventType }))
+  const allSeries = allSportsData.flatMap((data) =>
+    data.series.map((series) => ({ ...series, eventType: data.eventType }))
   );
   const isLoading = allSeries.length === 0 && !hasWaited;
 
@@ -87,7 +87,15 @@ export default function AllSportsPage() {
     });
 
   const liveMatches = allMatches.filter((m) => m.odds?.[0]?.odds?.inplay);
-  const upcomingMatches = allMatches.filter((m) => !m.odds?.[0]?.odds?.inplay);
+
+  const matchesBySport = liveMatches.reduce((acc, match) => {
+    const sportName = match.sportName || "Unknown";
+    if (!acc[sportName]) acc[sportName] = [];
+    acc[sportName].push(match);
+    return acc;
+  }, {} as Record<string, typeof liveMatches>);
+
+  const sortedSports = Object.entries(matchesBySport).sort(([a], [b]) => a.localeCompare(b));
 
   return (
     <div className="space-y-4">
@@ -109,36 +117,26 @@ export default function AllSportsPage() {
         </div>
       )}
 
-      {liveMatches.length > 0 && (
-        <div className="space-y-2">
-          <h2 className="text-sm font-semibold text-muted-foreground px-2">
-            Live
-          </h2>
-          {liveMatches.map((match, idx) => (
-            <MatchCard
-              key={idx}
-              match={match}
-              eventType={match.eventType || ""}
-              addToBetSlip={addToBetSlip}
-            />
-          ))}
-        </div>
-      )}
-
-      {upcomingMatches.length > 0 && (
-        <div className="space-y-2">
-          <h2 className="text-sm font-semibold text-muted-foreground px-2">
-            Upcoming
-          </h2>
-          {upcomingMatches.map((match, idx) => (
-            <MatchCard
-              key={idx}
-              match={match}
-              eventType={match.eventType || ""}
-              addToBetSlip={addToBetSlip}
-            />
-          ))}
-        </div>
+      {liveMatches.length === 0 ? (
+        <Card className="p-8 text-center">
+          <p className="text-muted-foreground">No live matches available</p>
+        </Card>
+      ) : (
+        sortedSports.map(([sportName, matches]) => (
+          <div key={sportName} className="space-y-2">
+            <h2 className="text-lg font-semibold text-foreground px-2">
+              {sportName}
+            </h2>
+            {matches.map((match) => (
+              <MatchCard
+                key={`${match.event?.id}-${match.odds?.[0]?.marketId}`}
+                match={match}
+                eventType={match.eventType || ""}
+                addToBetSlip={addToBetSlip}
+              />
+            ))}
+          </div>
+        ))
       )}
     </div>
   );
@@ -199,18 +197,13 @@ function MatchCard({
           className="flex-shrink-0"
         >
           <div>
-            <div className="flex items-center gap-1.5 mb-1">
-              {match.sportName && (
-                <span className="text-[9px] font-semibold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
-                  {match.sportName}
-                </span>
-              )}
-              {match.seriesName && (
+            {match.seriesName && (
+              <div className="flex items-center gap-1.5 mb-1">
                 <span className="text-[9px] text-muted-foreground">
                   {match.seriesName}
                 </span>
-              )}
-            </div>
+              </div>
+            )}
             <div className="flex items-center gap-1.5 mb-1">
               <h3 className="font-semibold text-xs">
                 {match.event?.name || "Match"}
