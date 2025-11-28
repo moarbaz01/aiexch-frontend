@@ -128,18 +128,25 @@ export default function TransactionConfirmation({
 
       {isDeposit && (
         <div>
-          <Label className="mb-2">Upload Payment Proof (Optional)</Label>
+          <Label className="mb-2">Upload Payment Proof *</Label>
           <Input
             type="file"
             accept="image/*"
             onChange={(e) => setImageData(e.target.files?.[0] || null)}
+            required
           />
+          {!imageData && (
+            <p className="text-xs text-muted-foreground mt-1">
+              Please upload payment proof to continue
+            </p>
+          )}
         </div>
       )}
 
       <Button
         onClick={() => onConfirm(imageData as File)}
         isLoading={isLoading}
+        disabled={isDeposit && !imageData}
         className="w-full"
       >
         {isDeposit ? "I've Sent the Payment" : "Confirm Withdrawal"}

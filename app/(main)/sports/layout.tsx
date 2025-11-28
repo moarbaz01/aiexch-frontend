@@ -37,12 +37,11 @@ export default function SportsLayout({
 }) {
   const pathname = usePathname();
   const selectedSport = pathname.split("/")[2] || "-4";
-  const { bets } = useBetSlip();
 
   return (
     <div className="min-h-screen">
       <div className="flex">
-        <div className="flex-1 lg:p-6 lg:pt-0 pb-20 lg:pb-6 lg:max-w-[calc(100vw-20rem-320px)]">
+        <div className="flex-1 lg:p-6 lg:pt-0 pb-20 lg:pb-6 w-full  lg:max-w-[calc(100vw-20rem-320px)]">
           {/* Sports Navigation */}
           <div className="mb-6">
             <div className="border-border">

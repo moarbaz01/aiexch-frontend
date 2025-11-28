@@ -1,10 +1,9 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Cinzel } from "next/font/google";
 import "./globals.css";
 import BottomNavigation from "@/components/layout/bottom-tab";
 import MainLayout from "@/components/main-layout";
-import Footer from "@/components/layout/footer";
 import { PopupDisplay } from "@/components/popups/popup-display";
 import { QueryProvider } from "@/providers/query-provider";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -19,6 +18,11 @@ import NextTopLoader from "nextjs-toploader";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  variable: "--font-cinzel",
 });
 
 export const metadata: Metadata = {
@@ -39,7 +43,7 @@ export default function RootLayout({
         <ThemeScript />
       </head>
       <body
-        className={`${inter.variable} min-h-screen overflow-x-hidden `}
+        className={`${inter.variable} ${cinzel.variable} min-h-screen overflow-x-hidden `}
         suppressHydrationWarning={true}
       >
         <NextTopLoader />

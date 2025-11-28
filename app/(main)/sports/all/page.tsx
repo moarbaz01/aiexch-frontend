@@ -227,7 +227,7 @@ function MatchCard({
           </div>
         </Link>
 
-        <div className="flex gap-2 flex-wrap justify-end">
+        <div className="flex gap-2 flex-wrap justify-end shrink-0">
           {hideExtrasFor.includes(eventType)
             ? match.odds?.map((mkt, idx) => (
                 <Link
