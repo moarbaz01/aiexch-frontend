@@ -15,7 +15,7 @@ export function BetSlip() {
   const [isOpen, setIsOpen] = useState(false);
   const { bets, removeBet, updateStake, clearBets } = useBetSlip();
   const { placeBet, isPlacingBet } = useBetting();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const { data: currentBetsData } = useMyBets("all");
   const currentBets = (currentBetsData?.data || []).filter(
     (bet: any) => bet.status === "pending" || bet.status === "matched"
@@ -25,6 +25,12 @@ export function BetSlip() {
     if (!isLoggedIn) {
       toast.error("Please login to place bets");
       window.dispatchEvent(new CustomEvent("openAuthModal"));
+      return;
+    }
+
+    const userBalance = parseFloat(user?.balance || "0");
+    if (userBalance < totalStake) {
+      toast.error(`Insufficient balance. You have ₹${userBalance.toFixed(2)} but need ₹${totalStake.toFixed(2)}`);
       return;
     }
 
@@ -64,11 +70,13 @@ export function BetSlip() {
     }
   };
 
-  const totalStake = bets.reduce((sum, bet) => sum + parseFloat(bet.stake), 0);
+  const totalStake = bets.reduce((sum, bet) => sum + parseFloat(bet.stake || "0"), 0);
   const totalWin = bets.reduce(
-    (sum, bet) => sum + parseFloat(bet.potentialWin),
+    (sum, bet) => sum + parseFloat(bet.potentialWin || "0"),
     0
   );
+  const userBalance = parseFloat(user?.balance || "0");
+  const hasInsufficientBalance = isLoggedIn && userBalance < totalStake;
 
   const EmptyState = ({ message }: { message: string }) => (
     <div className="text-center py-8">
@@ -131,10 +139,15 @@ export function BetSlip() {
 
                   <BetSummary totalStake={totalStake} totalWin={totalWin} />
 
+                  {hasInsufficientBalance && (
+                    <div className="text-xs text-destructive text-center p-2 bg-destructive/10 rounded">
+                      Insufficient balance: ₹{userBalance.toFixed(2)} / ₹{totalStake.toFixed(2)}
+                    </div>
+                  )}
                   <Button
                     className="w-full"
                     onClick={handlePlaceAllBets}
-                    disabled={isPlacingBet || bets.length === 0}
+                    disabled={isPlacingBet || bets.length === 0 || hasInsufficientBalance}
                   >
                     {isPlacingBet ? "Placing..." : "Place Bet"}
                   </Button>
@@ -172,10 +185,15 @@ export function BetSlip() {
                     />
                   ))}
                   <BetSummary totalStake={totalStake} totalWin={totalWin} />
+                  {hasInsufficientBalance && (
+                    <div className="text-xs text-destructive text-center p-2 bg-destructive/10 rounded">
+                      Insufficient balance: ₹{userBalance.toFixed(2)} / ₹{totalStake.toFixed(2)}
+                    </div>
+                  )}
                   <Button
                     className="w-full"
                     onClick={handlePlaceAllBets}
-                    disabled={isPlacingBet || bets.length === 0}
+                    disabled={isPlacingBet || bets.length === 0 || hasInsufficientBalance}
                   >
                     {isPlacingBet ? "Placing..." : "Place All Bets"}
                   </Button>
