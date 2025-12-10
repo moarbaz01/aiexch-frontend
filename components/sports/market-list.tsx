@@ -204,11 +204,13 @@ function renderOdds({
     </div>
   );
 
+  const displayPrices = type === "Back" ? prices.slice(-3).reverse() : prices.slice(0, 3);
+
   return (
     <div className="flex flex-col gap-1">
       {label}
       <div className="flex gap-1">
-        {prices.slice(0, 3).map((pricePoint, idx) => {
+        {displayPrices.map((pricePoint, idx) => {
           const isLocked = pricePoint.price === 0 || pricePoint.price <= 1.1;
           const isBack = type === "Back";
           const baseClasses = isBack

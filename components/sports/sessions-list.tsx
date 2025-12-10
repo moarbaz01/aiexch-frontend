@@ -10,8 +10,6 @@ function formatSize(size: number): string {
   return Math.floor(size).toString();
 }
 
-
-
 export function SessionsList({
   sessions,
   title,
@@ -37,7 +35,10 @@ export function SessionsList({
         </div>
         <div className="space-y-2">
           {Array.from({ length: 4 }).map((_, idx) => (
-            <div key={idx} className="bg-card/40 backdrop-blur-2xl border border-border rounded-md p-2">
+            <div
+              key={idx}
+              className="bg-card/40 backdrop-blur-2xl border border-border rounded-md p-2"
+            >
               <div className="flex justify-between items-center">
                 <Skeleton className="h-4 w-32 bg-muted/20" />
                 <div className="flex gap-2">
@@ -59,7 +60,9 @@ export function SessionsList({
       {(title || isCollapsible) && (
         <div
           className={`bg-card/40 backdrop-blur-2xl border border-border rounded-md p-2 ${
-            isCollapsible ? "cursor-pointer hover:bg-card/60 transition-colors" : ""
+            isCollapsible
+              ? "cursor-pointer hover:bg-card/60 transition-colors"
+              : ""
           }`}
           onClick={isCollapsible ? () => setIsOpen(!isOpen) : undefined}
         >
@@ -76,11 +79,11 @@ export function SessionsList({
                 ))}
             </div>
             <div className="flex items-center gap-2">
-              <div className="bg-chart-3 text-white text-xs font-medium px-2 py-1 rounded min-w-[50px] text-center">
-                Yes
-              </div>
               <div className="bg-chart-2 text-white text-xs font-medium px-2 py-1 rounded min-w-[50px] text-center">
                 No
+              </div>
+              <div className="bg-chart-3 text-white text-xs font-medium px-2 py-1 rounded min-w-[50px] text-center">
+                Yes
               </div>
             </div>
           </div>
@@ -126,38 +129,6 @@ export function SessionsList({
 
                 {/* Back / Lay Buttons */}
                 <div className="flex gap-2 flex-shrink-0 overflow-x-auto relative">
-                  {/* Back */}
-                  <div
-                    className={`text-white text-xs px-2 py-1.5 rounded text-center min-w-[50px] h-[38px] flex flex-col items-center justify-center transition ${
-                      canTrade
-                        ? "bg-chart-3 cursor-pointer hover:bg-chart-3/80"
-                        : "bg-gray-600 cursor-not-allowed"
-                    }`}
-                    onClick={() =>
-                      canTrade &&
-                      addToBetSlip({
-                        id: Date.now() + idx,
-                        teams: session.RunnerName,
-                        market: `${session.RunnerName} - Back`,
-                        odds: session.BackPrice1.toString(),
-                        stake: "100",
-                        potentialWin: (100 * session.BackPrice1).toFixed(2),
-                        matchId: "1001",
-                        marketId: session.gtype,
-                        selectionId: session.SelectionId,
-                      })
-                    }
-                  >
-                    {canTrade ? (
-                      <div className="text-[11px] font-bold flex flex-col">
-                        <p>{session.BackPrice1}</p>
-                        <p className="text-[9px]">({formatSize(session.BackSize1)})</p>
-                      </div>
-                    ) : (
-                      <Lock size={16} />
-                    )}
-                  </div>
-
                   {/* Lay */}
                   <div
                     className={`text-white text-xs px-2 py-1.5 rounded text-center min-w-[50px] h-[38px] flex flex-col items-center justify-center transition ${
@@ -183,7 +154,43 @@ export function SessionsList({
                     {canTrade ? (
                       <div className="text-[11px] font-bold flex flex-col">
                         <p>{session.LayPrice1}</p>
-                        <p className="text-[9px]">({formatSize(session.LaySize1)})</p>
+                        <p className="text-[9px]">
+                          ({formatSize(session.LaySize1)})
+                        </p>
+                      </div>
+                    ) : (
+                      <Lock size={16} />
+                    )}
+                  </div>
+
+                  {/* Back */}
+                  <div
+                    className={`text-white text-xs px-2 py-1.5 rounded text-center min-w-[50px] h-[38px] flex flex-col items-center justify-center transition ${
+                      canTrade
+                        ? "bg-chart-3 cursor-pointer hover:bg-chart-3/80"
+                        : "bg-gray-600 cursor-not-allowed"
+                    }`}
+                    onClick={() =>
+                      canTrade &&
+                      addToBetSlip({
+                        id: Date.now() + idx,
+                        teams: session.RunnerName,
+                        market: `${session.RunnerName} - Back`,
+                        odds: session.BackPrice1.toString(),
+                        stake: "100",
+                        potentialWin: (100 * session.BackPrice1).toFixed(2),
+                        matchId: "1001",
+                        marketId: session.gtype,
+                        selectionId: session.SelectionId,
+                      })
+                    }
+                  >
+                    {canTrade ? (
+                      <div className="text-[11px] font-bold flex flex-col">
+                        <p>{session.BackPrice1}</p>
+                        <p className="text-[9px]">
+                          ({formatSize(session.BackSize1)})
+                        </p>
                       </div>
                     ) : (
                       <Lock size={16} />

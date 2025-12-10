@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useBetSlip } from "@/contexts/BetSlipContext";
 import { BetSlip } from "@/components/sports/bet-slip";
 import { sportsList } from "@/data";
+import { useEffect } from "react";
 
 const sportsIcons = sportsList.map((sport) => ({
   name: sport.name,
@@ -39,7 +39,7 @@ export default function SportsLayout({
   const selectedSport = pathname.split("/")[2] || "-4";
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen ">
       <div className="flex">
         <div className="flex-1 lg:p-6 lg:pt-0 pb-20 lg:pb-6 w-full  lg:max-w-[calc(100vw-20rem-320px)]">
           {/* Sports Navigation */}
@@ -48,7 +48,7 @@ export default function SportsLayout({
               <div className="flex items-center gap-4 sm:gap-4 overflow-x-auto scrollbar-hide -mr-4 pr-4">
                 <Link
                   href="/sports/all"
-                  className={`flex flex-col w-[100px] h-[100px] rounded-md p-4 items-center justify-center gap-1 cursor-pointer transition-colors ${
+                  className={`flex flex-col min-w-[100px] w-[100px] h-[100px] rounded-md p-4 items-center justify-center gap-1 cursor-pointer transition-colors ${
                     selectedSport === "all"
                       ? "bg-primary/20 border border-primary/50"
                       : "bg-muted hover:bg-muted/80"
@@ -68,7 +68,7 @@ export default function SportsLayout({
                   <Link
                     key={i}
                     href={`/sports/${sport.eventType}`}
-                    className={`flex flex-col w-[100px] h-[100px] rounded-md p-4 items-center justify-center gap-1 cursor-pointer transition-colors ${
+                    className={`flex flex-col min-w-[100px] w-[100px] h-[100px] rounded-md p-4 items-center justify-center gap-1 cursor-pointer transition-colors ${
                       selectedSport === sport.eventType
                         ? "bg-primary/20 border border-primary/50"
                         : "bg-muted hover:bg-muted/80"
@@ -93,8 +93,8 @@ export default function SportsLayout({
         </div>
 
         {/* Right Sidebar - Bet Slip */}
-        <div className="hidden lg:block w-80 shrink-0">
-          <div className="sticky top-16 w-80 h-[calc(100vh-4rem)] p-4">
+        <div className="hidden shrink-0 lg:block w-80 p-4">
+          <div className="sticky top-16">
             <BetSlip />
           </div>
         </div>

@@ -91,177 +91,182 @@ export function SportsProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  const connect = useCallback((shouldConnect: boolean) => {
-    if (!shouldConnect) {
-      // Disconnect if we shouldn't be connected
-      if (wsRef.current) {
-        console.log("[SportsContext] Disconnecting WebSocket (not on sports page)");
-        wsRef.current.close();
-        wsRef.current = null;
-      }
-      return;
-    }
-
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      return;
-    }
-
-    // Get backend URL from environment or use default
-    const backendUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-    const wsProtocol = backendUrl.startsWith("https") ? "wss:" : "ws:";
-    const wsHost = backendUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
-
-    const wsUrl =
-      process.env.NEXT_PUBLIC_WS_URL ||
-      (typeof window !== "undefined"
-        ? `${wsProtocol}//${wsHost}/sports/ws`
-        : "ws://localhost:3001/sports/ws");
-
-    console.log("[SportsContext] Connecting to WebSocket:", wsUrl);
-
-    try {
-      const ws = new WebSocket(wsUrl);
-
-      ws.onopen = () => {
-        console.log("[SportsContext] ✅ WebSocket connected");
-        setIsConnected(true);
-        reconnectAttemptsRef.current = 0;
-
-        // Resubscribe to all existing subscriptions
-        const subscriptionCount = subscriptionsRef.current.size;
-        console.log(
-          `[SportsContext] Resubscribing to ${subscriptionCount} existing subscription(s)`
-        );
-
-        subscriptionsRef.current.forEach((callbacks, subKey) => {
-          const [type, ...parts] = subKey.split(":");
-          const eventTypeId = parts[0];
-          const rest = parts.slice(1).join(":");
-
-          let subscription: any = { eventTypeId };
-          if (type === "odds" || type === "bookmakers") {
-            subscription.marketIds = rest ? rest.split(",") : [];
-          } else if (
-            type === "sessions" ||
-            type === "score" ||
-            type === "premium" ||
-            type === "matchDetails"
-          ) {
-            subscription.matchId = rest;
-          }
-
-          const subscribeMessage = {
-            action: "subscribe",
-            type,
-            ...subscription,
-          };
+  const connect = useCallback(
+    (shouldConnect: boolean) => {
+      if (!shouldConnect) {
+        // Disconnect if we shouldn't be connected
+        if (wsRef.current) {
           console.log(
-            `[SportsContext] Resubscribing to ${subKey}:`,
-            subscribeMessage
+            "[SportsContext] Disconnecting WebSocket (not on sports page)"
           );
-          ws.send(JSON.stringify(subscribeMessage));
-        });
-      };
+          wsRef.current.close();
+          wsRef.current = null;
+        }
+        return;
+      }
 
-      ws.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-          const { type, data, subscription } = message;
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        return;
+      }
 
-          // Ignore confirmation messages (subscribed/unsubscribed) - these are just confirmations, not data
-          if (type === "subscribed" || type === "unsubscribed") {
+      // Get backend URL from environment or use default
+      const backendUrl =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+      const wsProtocol = backendUrl.startsWith("https") ? "wss:" : "ws:";
+      const wsHost = backendUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+      const wsUrl =
+        process.env.NEXT_PUBLIC_WS_URL ||
+        (typeof window !== "undefined"
+          ? `${wsProtocol}//${wsHost}/sports/ws`
+          : "ws://localhost:3001/sports/ws");
+
+      console.log("[SportsContext] Connecting to WebSocket:", wsUrl);
+
+      try {
+        const ws = new WebSocket(wsUrl);
+
+        ws.onopen = () => {
+          console.log("[SportsContext] ✅ WebSocket connected");
+          setIsConnected(true);
+          reconnectAttemptsRef.current = 0;
+
+          // Resubscribe to all existing subscriptions
+          const subscriptionCount = subscriptionsRef.current.size;
+          console.log(
+            `[SportsContext] Resubscribing to ${subscriptionCount} existing subscription(s)`
+          );
+
+          subscriptionsRef.current.forEach((callbacks, subKey) => {
+            const [type, ...parts] = subKey.split(":");
+            const eventTypeId = parts[0];
+            const rest = parts.slice(1).join(":");
+
+            let subscription: any = { eventTypeId };
+            if (type === "odds" || type === "bookmakers") {
+              subscription.marketIds = rest ? rest.split(",") : [];
+            } else if (
+              type === "sessions" ||
+              type === "score" ||
+              type === "premium" ||
+              type === "matchDetails"
+            ) {
+              subscription.matchId = rest;
+            }
+
+            const subscribeMessage = {
+              action: "subscribe",
+              type,
+              ...subscription,
+            };
             console.log(
-              `[SportsContext] Received ${type} confirmation:`,
-              subscription
+              `[SportsContext] Resubscribing to ${subKey}:`,
+              subscribeMessage
             );
-            return;
-          }
+            ws.send(JSON.stringify(subscribeMessage));
+          });
+        };
 
-          // Only process data update messages (series:update, odds:update, etc.)
-          if (type && subscription && type.includes(":update")) {
-            // Extract base type from "series:update" -> "series"
-            const baseType = type.replace(/:update$/, "") as SubscriptionType;
+        ws.onmessage = (event) => {
+          try {
+            const message = JSON.parse(event.data);
+            const { type, data, subscription } = message;
 
-            console.log("[SportsContext] Received data update:", {
-              originalType: type,
-              baseType,
-              subscription,
-              hasData: !!data,
-              dataLength: Array.isArray(data) ? data.length : data ? 1 : 0,
-            });
-
-            const subKey = getSubscriptionKey(baseType, subscription);
-            dataCacheRef.current.set(subKey, data);
-
-            // Notify all callbacks for this subscription
-            const callbacks = subscriptionsRef.current.get(subKey);
-            if (callbacks) {
+            // Ignore confirmation messages (subscribed/unsubscribed) - these are just confirmations, not data
+            if (type === "subscribed" || type === "unsubscribed") {
               console.log(
-                `[SportsContext] Notifying ${callbacks.size} callback(s) for ${subKey}`
+                `[SportsContext] Received ${type} confirmation:`,
+                subscription
               );
-              callbacks.forEach((callback) => callback(data));
+              return;
+            }
+
+            // Only process data update messages (series:update, odds:update, etc.)
+            if (type && subscription && type.includes(":update")) {
+              // Extract base type from "series:update" -> "series"
+              const baseType = type.replace(/:update$/, "") as SubscriptionType;
+
+              console.log("[SportsContext] Received data update:", {
+                originalType: type,
+                baseType,
+                subscription,
+                hasData: !!data,
+                dataLength: Array.isArray(data) ? data.length : data ? 1 : 0,
+              });
+
+              const subKey = getSubscriptionKey(baseType, subscription);
+              dataCacheRef.current.set(subKey, data);
+
+              // Notify all callbacks for this subscription
+              const callbacks = subscriptionsRef.current.get(subKey);
+              if (callbacks) {
+                console.log(
+                  `[SportsContext] Notifying ${callbacks.size} callback(s) for ${subKey}`
+                );
+                callbacks.forEach((callback) => callback(data));
+              } else {
+                console.warn(
+                  `[SportsContext] No callbacks found for subscription: ${subKey}`
+                );
+              }
+            } else if (type && !type.includes(":update")) {
+              // Log other message types for debugging (but don't process them)
+              console.log("[SportsContext] Received non-update message:", {
+                type,
+                hasSubscription: !!subscription,
+                hasData: !!data,
+              });
             } else {
               console.warn(
-                `[SportsContext] No callbacks found for subscription: ${subKey}`
+                "[SportsContext] Message missing type or subscription:",
+                {
+                  hasType: !!type,
+                  hasSubscription: !!subscription,
+                  message,
+                }
               );
             }
-          } else if (type && !type.includes(":update")) {
-            // Log other message types for debugging (but don't process them)
-            console.log("[SportsContext] Received non-update message:", {
-              type,
-              hasSubscription: !!subscription,
-              hasData: !!data,
-            });
-          } else {
-            console.warn(
-              "[SportsContext] Message missing type or subscription:",
-              {
-                hasType: !!type,
-                hasSubscription: !!subscription,
-                message,
-              }
+          } catch (error) {
+            console.error(
+              "[SportsContext] Error parsing WebSocket message:",
+              error
             );
           }
-        } catch (error) {
-          console.error(
-            "[SportsContext] Error parsing WebSocket message:",
-            error
+        };
+
+        ws.onerror = (error) => {
+          console.error("[SportsContext] WebSocket error:", error);
+        };
+
+        ws.onclose = () => {
+          console.log("[SportsContext] WebSocket disconnected");
+          setIsConnected(false);
+          wsRef.current = null;
+
+          // Attempt to reconnect with exponential backoff
+          const delay = Math.min(
+            1000 * Math.pow(2, reconnectAttemptsRef.current),
+            30000
           );
-        }
-      };
+          reconnectAttemptsRef.current++;
 
-      ws.onerror = (error) => {
-        console.error("[SportsContext] WebSocket error:", error);
-      };
+          console.log(
+            `[SportsContext] Reconnecting in ${delay}ms (attempt ${reconnectAttemptsRef.current})`
+          );
 
-      ws.onclose = () => {
-        console.log("[SportsContext] WebSocket disconnected");
+          reconnectTimeoutRef.current = setTimeout(() => {
+            connect();
+          }, delay);
+        };
+
+        wsRef.current = ws;
+      } catch (error) {
+        console.error("[SportsContext] Failed to create WebSocket:", error);
         setIsConnected(false);
-        wsRef.current = null;
-
-        // Attempt to reconnect with exponential backoff
-        const delay = Math.min(
-          1000 * Math.pow(2, reconnectAttemptsRef.current),
-          30000
-        );
-        reconnectAttemptsRef.current++;
-
-        console.log(
-          `[SportsContext] Reconnecting in ${delay}ms (attempt ${reconnectAttemptsRef.current})`
-        );
-
-        reconnectTimeoutRef.current = setTimeout(() => {
-          connect();
-        }, delay);
-      };
-
-      wsRef.current = ws;
-    } catch (error) {
-      console.error("[SportsContext] Failed to create WebSocket:", error);
-      setIsConnected(false);
-    }
-  }, [getSubscriptionKey]);
+      }
+    },
+    [getSubscriptionKey]
+  );
 
   const subscribe = useCallback(
     (
@@ -361,7 +366,9 @@ export function SportsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Only connect if on sports page
-    const isSportsPage = typeof window !== "undefined" && window.location.pathname.startsWith("/sports");
+    const isSportsPage =
+      typeof window !== "undefined" &&
+      window.location.pathname.startsWith("/sports");
     connect(isSportsPage);
 
     // Cleanup on unmount
@@ -383,14 +390,16 @@ export function SportsProvider({ children }: { children: React.ReactNode }) {
         console.log("[SportsContext] Navigated to sports page, connecting...");
         connect(true);
       } else if (!isSportsPage && wsRef.current) {
-        console.log("[SportsContext] Navigated away from sports page, disconnecting...");
+        console.log(
+          "[SportsContext] Navigated away from sports page, disconnecting..."
+        );
         connect(false);
       }
     };
 
     // Listen for navigation events
     window.addEventListener("popstate", handleRouteChange);
-    
+
     // For Next.js client-side navigation, we need to check periodically
     const interval = setInterval(handleRouteChange, 1000);
 

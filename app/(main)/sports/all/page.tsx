@@ -95,7 +95,9 @@ export default function AllSportsPage() {
     return acc;
   }, {} as Record<string, typeof liveMatches>);
 
-  const sortedSports = Object.entries(matchesBySport).sort(([a], [b]) => a.localeCompare(b));
+  const sortedSports = Object.entries(matchesBySport).sort(([a], [b]) =>
+    a.localeCompare(b)
+  );
 
   return (
     <div className="space-y-4">
@@ -256,7 +258,7 @@ function MatchCard({
                   ["ACTIVE", "OPEN"].includes(marketStatusRaw) &&
                   ["ACTIVE", "OPEN"].includes(runnerStatus);
 
-                const lastBack = oddsRunner?.back?.[oddsRunner.back.length - 1];
+                const firstBack = oddsRunner?.back?.[0];
                 const firstLay = oddsRunner?.lay?.[0];
 
                 return (
@@ -279,10 +281,10 @@ function MatchCard({
                         : "2"}
                     </div>
                     <div className="flex gap-0.5">
-                      {lastBack && (
+                      {firstBack && (
                         <OddsButton
                           type="Back"
-                          odd={lastBack}
+                          odd={firstBack}
                           canTrade={canTrade}
                           addToBetSlip={addToBetSlip}
                           runner={runner}
